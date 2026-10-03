@@ -1,0 +1,40 @@
+{
+  "name": "inventory-app",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "dev:local": "vite --mode preview-db --open",
+    "dev:web": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "db:migrate": "node --env-file=.env.local scripts/migrate.js",
+    "db:seed": "node --env-file=.env.local scripts/migrate.js --seed",
+    "db:check": "node --env-file=.env.local scripts/check-ledger.js",
+    "test:concurrency": "node --env-file=.env.local scripts/concurrency-test.js",
+    "admin:password": "node --env-file=.env.local scripts/set-admin-password.js",
+    "test:api": "node tests/api/run.mjs"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.2.0",
+    "@tanstack/react-query": "^5.104.1",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-router-dom": "^7.18.4",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
+    "@eslint/js": "^10.0.1",
+    "@vitejs/plugin-react": "^6.1.1",
+    "eslint": "^10.12.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.7",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.9",
+    "vite": "^8.3.2"
+  }
+}

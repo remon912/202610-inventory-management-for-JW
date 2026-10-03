@@ -1,0 +1,101 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.toggle {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.toggle legend {
+  padding: 0;
+  margin-bottom: var(--space-1);
+}
+
+.segments {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.segment {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 52px;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 17px;
+  cursor: pointer;
+}
+.segment input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+.segment:has(input:focus-visible) {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+.sign {
+  font-size: 22px;
+  line-height: 1;
+}
+.in:has(input:checked) {
+  border-color: var(--in);
+  background: var(--in-bg);
+  color: var(--in);
+}
+.out:has(input:checked) {
+  border-color: var(--out);
+  background: var(--out-bg);
+  color: var(--out);
+}
+
+.qtyRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.qtyInput {
+  font-size: 22px;
+  font-weight: 700;
+  max-width: 220px;
+}
+.qtyUnit {
+  color: var(--text-muted);
+}
+
+.preview {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+.preview strong {
+  color: var(--text);
+}
+.preview .negative {
+  color: var(--out);
+}
+
+.submit {
+  min-height: 52px;
+  font-size: 17px;
+}
+.submit:global(.btn-in) {
+  background: var(--in);
+  color: var(--surface);
+}
+.submit:global(.btn-out) {
+  background: var(--out);
+  color: var(--surface);
+}

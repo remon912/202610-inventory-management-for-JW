@@ -1,0 +1,110 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 760px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+@media (min-width: 600px) {
+  .section {
+    padding: var(--space-5);
+  }
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 800;
+}
+.subTitle {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+
+.desc,
+.muted {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  min-height: 52px;
+  padding: var(--space-2) var(--space-3);
+}
+.row + .row {
+  border-top: 1px solid var(--border);
+}
+
+.rowName {
+  flex: 1;
+  min-width: 120px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.tag {
+  margin-left: var(--space-2);
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.admin {
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 700;
+}
+.member {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.addBox {
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+}
+
+.inline {
+  display: flex;
+  gap: var(--space-2);
+}
+.inline :global(.input) {
+  flex: 1;
+  min-width: 0;
+}
+
+.pwForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 420px;
+}

@@ -1,0 +1,96 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  height: 100%;
+  padding: var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+.card:hover {
+  border-color: var(--border-strong);
+}
+.low {
+  border-left: 4px solid var(--warn);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.titleCol {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+}
+
+.name {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.35;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+/* 카드 전체를 클릭 영역으로 (입출고 버튼은 위로 올림) */
+.link {
+  color: var(--text);
+  text-decoration: none;
+}
+.link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+}
+.link:focus-visible {
+  outline: none;
+}
+.link:focus-visible::after {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.location {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.foot {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-3);
+  margin-top: auto;
+  padding-top: var(--space-3);
+}
+
+.qty strong {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1;
+}
+.unit {
+  margin-left: 2px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.cost {
+  flex: 1;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.move {
+  position: relative;
+  z-index: 1;
+}

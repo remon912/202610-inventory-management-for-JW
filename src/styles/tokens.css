@@ -1,0 +1,85 @@
+/* 디자인 토큰: 라이트 기본, 시스템 다크 또는 data-theme="dark"에서 다크 */
+:root {
+  --font-sans:
+    'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
+    'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --surface-2: #eef0f3;
+  --text: #171a1f;
+  --text-muted: #555d6b;
+  --border: #d5d9e0;
+  --border-strong: #9aa2ae;
+  --primary: #2457d6;
+  --primary-hover: #1c47b3;
+  --on-primary: #ffffff;
+  --focus: #2457d6;
+
+  --in: #0b6e37;
+  --in-bg: #e3f3e9;
+  --out: #b42318;
+  --out-bg: #fdeceb;
+  --warn: #7a4f00;
+  --warn-bg: #fff1cc;
+
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --shadow: 0 1px 2px rgb(16 24 40 / 6%), 0 1px 3px rgb(16 24 40 / 8%);
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --content-width: 960px;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #0f1115;
+    --surface: #181b21;
+    --surface-2: #22262e;
+    --text: #e9ebef;
+    --text-muted: #a6adb9;
+    --border: #2f343d;
+    --border-strong: #5b6370;
+    --primary: #7ea6ff;
+    --primary-hover: #a3bfff;
+    --on-primary: #0d1220;
+    --focus: #9dbbff;
+    --in: #6fdc9c;
+    --in-bg: #123321;
+    --out: #ff9a90;
+    --out-bg: #3b1714;
+    --warn: #f5c95a;
+    --warn-bg: #33280c;
+    --shadow: none;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --bg: #0f1115;
+  --surface: #181b21;
+  --surface-2: #22262e;
+  --text: #e9ebef;
+  --text-muted: #a6adb9;
+  --border: #2f343d;
+  --border-strong: #5b6370;
+  --primary: #7ea6ff;
+  --primary-hover: #a3bfff;
+  --on-primary: #0d1220;
+  --focus: #9dbbff;
+  --in: #6fdc9c;
+  --in-bg: #123321;
+  --out: #ff9a90;
+  --out-bg: #3b1714;
+  --warn: #f5c95a;
+  --warn-bg: #33280c;
+  --shadow: none;
+  color-scheme: dark;
+}

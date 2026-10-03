@@ -1,0 +1,93 @@
+/* 미리보기 사진 */
+.thumb,
+.thumbEmpty {
+  flex: none;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.thumb {
+  object-fit: cover;
+  display: block;
+}
+.thumbEmpty {
+  display: grid;
+  place-items: center;
+  color: var(--text-muted);
+  font-weight: 800;
+  font-size: 18px;
+}
+
+/* 사진 입력 */
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.preview,
+.previewEmpty {
+  width: 88px;
+  height: 88px;
+  flex: none;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+}
+.preview {
+  object-fit: cover;
+}
+.previewEmpty {
+  display: grid;
+  place-items: center;
+  font-size: 28px;
+  border-style: dashed;
+}
+.inputActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* 품목 상세 사진 */
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.main {
+  display: block;
+  width: 100%;
+  max-width: 540px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.strip {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.stripLink {
+  display: block;
+  border-radius: var(--radius-sm);
+}
+.caption {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* 기존 품목 사진 등록·변경 */
+.editor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  flex: none;
+  max-width: 160px;
+  text-align: center;
+}

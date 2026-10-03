@@ -1,0 +1,40 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.row {
+  display: grid;
+  gap: var(--space-5);
+}
+
+@media (min-width: 600px) {
+  .row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.readonly {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 12px;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+.readonly strong {
+  font-size: 18px;
+}
+
+.submit {
+  min-height: 52px;
+  font-size: 17px;
+}
+
+.photoRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}

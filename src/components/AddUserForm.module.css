@@ -1,0 +1,40 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-3);
+}
+@media (min-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.roles {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.roles legend {
+  padding: 0;
+  margin-bottom: var(--space-1);
+}
+
+.radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  margin-right: var(--space-4);
+  cursor: pointer;
+}
+.radio input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--primary);
+}

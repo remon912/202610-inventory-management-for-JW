@@ -1,0 +1,64 @@
+/* 관리 화면 목록 줄 안의 수정 폼 */
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-3);
+}
+@media (min-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.roles {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.roles legend {
+  padding: 0;
+  margin-bottom: var(--space-1);
+}
+.roles:disabled {
+  opacity: 0.6;
+}
+
+.radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  margin-right: var(--space-4);
+  cursor: pointer;
+}
+.radio input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--primary);
+}
+
+.inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.inline :global(.input) {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-2);
+}

@@ -1,0 +1,194 @@
+# 재고관리 웹앱
+
+품목별 실시간 보유수량을 관리하고, 여러 사용자의 입고(+)·출고(−) 내역을 원장(Ledger) 방식으로 기록하는 웹앱입니다.
+
+- 프론트엔드: React + Vite, React Router, TanStack Query (15초 polling)
+- 백엔드: Vercel Serverless Functions (`/api`), Zod 입력 검증
+- DB: Neon (Serverless PostgreSQL), `@neondatabase/serverless`
+- 배포 URL: _(배포 후 기재)_
+
+## 주요 기능
+
+| 화면           | 경로                            | 내용                                                                                             |
+| -------------- | ------------------------------- | ------------------------------------------------------------------------------------------------ |
+| 품목 목록      | `/`                             | 품목명 검색, 재고 부족만 보기                                                                    |
+| 품목 상세      | `/items/:id`                    | 보유수량·단가·재고 금액, 입출고 이력 최신순                                                      |
+| 입출고 등록    | `/items/:id/move`               | 입고: 입고처(구입처 자동 입력)·입고단가 / 출고: 등록된 사용처만 선택, 없으면 + 추가              |
+| 품목 등록·수정 | `/items/new`, `/items/:id/edit` | 기존 품목을 먼저 검색, 없으면 + 추가로 등록 (구입처 포함). 초기 수량은 '초기 재고' 이력으로 기록 |
+| 입출고 현황    | `/reports`                      | 품목별·사용처별, 일별·월별 집계, 기간 지정, 상세 내역, 프린트                                    |
+| 관리 (관리자)  | `/admin`                        | 사용자 추가·삭제, 사용처 등록·삭제, 내 비밀번호 변경                                             |
+
+- 처음 접속하면 사용자 선택 화면이 나옵니다. 일반 사용자는 이름만 선택하고, **관리자는 비밀번호로 로그인**합니다.
+- **관리자 전용**: 품목 등록·삭제, 사용자 추가·수정·삭제, 사용처 등록·수정·삭제. 사용자·품목 삭제는 이력 보존을 위해 삭제 표시만 합니다.
+- 품목 사진은 **품목 등록**과 **입고** 때만 추가할 수 있습니다. 가장 최근 사진이 대표 사진이 되어 품목 검색·목록·입출고 화면에 표시됩니다. 사진은 브라우저에서 줄여(긴 변 1280px, 미리보기 320px) JPEG로 DB에 저장합니다.
+- 출고 수량이 보유수량을 넘으면 서버가 거부하고(409) 현재 보유수량을 안내합니다.
+- 잘못된 기록은 삭제하지 않고, 이력의 **정정** 버튼으로 반대 부호 기록을 추가합니다.
+
+## 로컬 미리보기 (DB 설정 없이)
+
+```bash
+npm install
+npm run dev:local               # http://localhost:5173 — 브라우저가 자동으로 열림
+```
+
+Neon 대신 내장 PostgreSQL(PGlite)로 같은 API 코드를 실행합니다. 데이터는 `.local-db/`에 저장되며(Git 제외), 이 폴더를 지우면 샘플 데이터로 초기화됩니다.
+
+로컬 미리보기에서는 비밀번호가 없는 관리자에게 초기 비밀번호 `admin1234`가 설정됩니다 (`LOCAL_ADMIN_PASSWORD`로 변경 가능). 관리 화면에서 바로 바꾸세요.
+
+## 로컬 실행 (Neon 연결)
+
+사전 준비: Node.js 22 이상, [Neon](https://neon.tech) 프로젝트, Vercel CLI (`npm i -g vercel`)
+
+```bash
+npm install
+cp .env.example .env.local      # DATABASE_URL에 Neon 접속 문자열 입력
+npm run db:migrate              # 테이블 생성
+npm run db:seed                 # 초기 사용자 3명 (db/seed.sql을 실제 인원으로 수정)
+npm run admin:password -- "관리자" "새비밀번호"   # 관리자 비밀번호 설정 (최초 1회)
+vercel link                     # 최초 1회, Vercel 프로젝트 연결
+npm run dev                     # vercel dev: 프론트 + API 동시 실행 (http://localhost:3000)
+```
+
+> `npm run dev:web`은 Vite만 실행하므로 `/api`가 동작하지 않습니다. 화면 작업 시에도 `npm run dev`를 권장합니다.
+
+### 스크립트
+
+| 명령                       | 설명                                                       |
+| -------------------------- | ---------------------------------------------------------- |
+| `npm run dev`              | `vercel dev`로 프론트와 API 동시 실행                      |
+| `npm run build`            | 프로덕션 빌드                                              |
+| `npm run lint`             | ESLint                                                     |
+| `npm run format`           | Prettier                                                   |
+| `npm run db:migrate`       | `db/migrations/*.sql` 중 미적용 파일을 순서대로 적용       |
+| `npm run db:seed`          | 마이그레이션 + `db/seed.sql` 적용                          |
+| `npm run db:check`         | 모든 품목의 보유수량 = 원장 합계(SUM(delta)) 검사          |
+| `npm run test:concurrency` | 보유 10개 품목에 -1 출고 30건 동시 요청 → 10건만 성공 확인 |
+| `npm run test:api`         | API 테스트 전체 실행 (내장 DB 사용, Neon 불필요)           |
+| `npm run admin:password`   | 관리자 비밀번호 설정·초기화 (잠금 해제, 기존 세션 무효)    |
+
+## 환경변수
+
+| 변수             | 위치      | 설명                                          |
+| ---------------- | --------- | --------------------------------------------- |
+| `DATABASE_URL`   | 서버 전용 | Neon 접속 문자열                              |
+| `SESSION_SECRET` | 서버 전용 | 관리자 세션 서명 키 (32자 이상 무작위 문자열) |
+
+- 로컬은 `.env.local`(Git 제외), 운영은 Vercel 프로젝트 환경변수에 등록합니다.
+- 비밀값에 `VITE_` 접두사를 붙이지 마세요. 브라우저 번들에 노출됩니다.
+
+## 배포 (Vercel)
+
+1. GitHub 저장소에 푸시
+2. Vercel에서 저장소 Import (Framework: Vite, 자동 감지)
+3. Settings → Environment Variables에 `DATABASE_URL` 등록
+4. `main` 푸시 시 운영 배포, PR마다 Preview 배포
+
+작업 흐름: `feature/기능명` 브랜치 → Conventional Commits (`feat:`, `fix:`, `docs:` …) → PR → Preview 확인 → `main` 병합
+
+## 설계 메모
+
+### 원장 방식과 동시성
+
+`items.quantity`는 조회용 캐시이고, 모든 변동은 `stock_movements`에 한 줄씩 기록됩니다. 수량 증감과 이력 기록은 하나의 SQL 문(CTE)으로 처리합니다([api/\_lib/movement.js](api/_lib/movement.js)).
+
+- 조건부 `UPDATE ... WHERE quantity + delta >= 0`이 행 잠금을 잡으므로 동시 출고도 순서대로 평가됩니다.
+- 조건이 맞지 않으면 UPDATE가 0행이 되어 이력도 기록되지 않습니다.
+- 품목 등록 시 초기 수량도 '초기 재고' 이력으로 남겨 항상 `quantity = SUM(delta)`를 유지합니다.
+
+### API
+
+| 메서드 | 경로                       | 설명                                               |
+| ------ | -------------------------- | -------------------------------------------------- |
+| GET    | `/api/items`               | 품목 목록 (`?q=검색어&location=위치`)              |
+| POST   | `/api/items`               | 품목 등록 (관리자)                                 |
+| GET    | `/api/items/:id`           | 품목 상세                                          |
+| PATCH  | `/api/items/:id`           | 품목 수정, 보유수량 제외 (사용자 필요)             |
+| GET    | `/api/items/:id/movements` | 품목별 입출고 이력 (`?limit=`, 기본 100)           |
+| POST   | `/api/movements`           | 입출고 등록 (사용자 필요)                          |
+| GET    | `/api/users`               | 사용자 목록                                        |
+| POST   | `/api/users`               | 사용자 추가 (관리자, 관리자 추가 시 비밀번호 필수) |
+| DELETE | `/api/users/:id`           | 사용자 삭제 (관리자, 본인·마지막 관리자 불가)      |
+| DELETE | `/api/items/:id`           | 품목 삭제 (관리자, 이력 보존)                      |
+| DELETE | `/api/usage-places/:id`    | 사용처 삭제 (관리자)                               |
+| POST   | `/api/auth/login`          | 관리자 로그인 (5회 실패 시 5분 잠금)               |
+| POST   | `/api/auth/logout`         | 로그아웃                                           |
+| GET    | `/api/auth/me`             | 현재 관리자 세션                                   |
+| POST   | `/api/auth/password`       | 관리자 비밀번호 변경                               |
+| GET    | `/api/reports`             | 입출고 현황 (`from`, `to`, `group=day              | month`, `by=item | place`, `itemId`, `place`, `detail=1`) |
+| GET    | `/api/items/:id/photos`    | 품목 사진 목록 (최신순)                            |
+| GET    | `/api/photos/:id`          | 사진 이미지 (`?size=thumb` 미리보기)               |
+| GET    | `/api/usage-places`        | 사용처 목록                                        |
+| POST   | `/api/usage-places`        | 사용처 등록 (관리자)                               |
+
+응답: 성공 `{ ok: true, data }` / 실패 `{ ok: false, error: { code, message, details? } }`
+에러 코드: `VALIDATION_ERROR`(400), `USAGE_PLACE_NOT_FOUND`(400, 출고 시 미등록 사용처), `UNAUTHORIZED`(401), `ITEM_NOT_FOUND`(404), `INSUFFICIENT_STOCK`(409), `INTERNAL_ERROR`(500)
+
+### 미결 사항에 대한 MVP 기본값
+
+| 항목           | 현재 구현                                                                           | 변경 시                                                       |
+| -------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| 인증 방식      | 일반 사용자: 이름 선택(`X-User-Id`) / 관리자: 비밀번호 로그인 + HttpOnly 세션 쿠키  | 일반 사용자도 로그인이 필요하면 `requireUser` 교체 (Clerk 등) |
+| 재고자산 평가  | 단가 고정 (사용자가 입고단가 수정)                                                  | 이동평균법은 `recordMovement`에 단가 갱신 추가                |
+| 권한 구분      | 품목 등록·삭제, 사용자·사용처 관리는 관리자만 (품목 수정·사진·입출고는 모든 사용자) | `requireAdmin` 적용 범위 조정                                 |
+| 재고 부족 기준 | 품목별 `min_quantity` 사용, `보유수량 ≤ 기준`이면 표시                              | —                                                             |
+
+> 간이 사용자 선택은 **기록자 식별용**이며 보안 인증이 아닙니다. 외부 공개 전에 Clerk 등 실제 인증을 도입하세요.
+
+## 폴더 구조
+
+```
+api/
+  _lib/         DB 연결, 응답 형식, Zod 검증, 인증(requireUser/requireAdmin), 세션, 비밀번호 해시, 입출고 SQL
+  auth/         login, logout, me, password (관리자 로그인)
+  items/        품목 목록·등록·상세·수정·삭제, 품목별 이력·사진
+  photos/       사진 이미지 반환
+  users/        사용자 목록·추가·수정·삭제
+  usage-places/ 사용처 목록·등록·수정·삭제
+  movements.js  입출고 등록
+  reports.js    입출고 현황 집계
+db/             schema.sql (전체 스키마), migrations/ (001~004), seed.sql
+scripts/        migrate, check-ledger, concurrency-test, set-admin-password, 로컬 미리보기(local-db, vite-local-api)
+src/
+  components/   ItemCard, ItemForm, ItemSearch, MovementForm, MovementList, Combobox, PhotoInput,
+                ItemPhotoEditor, UserGate, AdminLoginForm, UserEditForm, PlaceEditForm, ConfirmButton …
+  pages/        ItemListPage, ItemDetailPage, ItemFormPage, MovementPage, ReportPage, AdminPage
+  hooks/        useItems, useMovements, useUsers, useUsagePlaces, useSession, useReport, useCurrentUser, useToast
+  lib/          api.js (fetch 래퍼), format.js, date.js, image.js (사진 축소·JPEG 변환)
+  styles/       tokens.css (디자인 토큰·다크 모드), global.css (공통·인쇄 스타일)
+```
+
+## 변경 이력
+
+모두 2026-10-03 작업입니다. DB 변경은 `npm run db:migrate`로 적용되며, 로컬 미리보기는 서버를 시작할 때 자동으로 적용됩니다.
+
+| 순서 | 요청 사항                   | 반영 내용                                                                                                                                                                                                                                                                 | DB 변경                                 |
+| ---- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| 1    | 기술명세서 v0.1 빌드        | 품목 목록·상세·등록·수정, 입출고 등록(마이너스 재고 차단), 원장 방식 이력, 15초 자동 갱신, 라이트/다크 모드, 동시성 테스트·원장 검사 스크립트                                                                                                                             | 001 `users`, `items`, `stock_movements` |
+| 2    | 로컬 화면 생성              | DB 설정 없이 실행하는 로컬 미리보기(`npm run dev:local`, PGlite 내장 DB, 샘플 데이터)                                                                                                                                                                                     | —                                       |
+| 3    | 품목 등록·입출고 화면 개선  | 품목 등록 시 기존 품목을 먼저 검색하고 없으면 **+ 추가**로 등록, 품목에 **구입처** 추가(입고처에 자동 입력), 입고 화면의 '납품단가'를 **'입고단가'**로 변경, 출고 사용처를 **등록된 목록에서만 선택**하고 새 사용처는 **+ 추가**로 등록(서버에서도 검사)                  | 002 `items.supplier`, `usage_places`    |
+| 4    | 사용자·목록·현황            | 사용자 선택을 필수로(선택 전에는 선택 화면만 표시), **+ 사용자 추가** 버튼, 품목 목록의 보관 위치 필터 삭제, **입출고 현황** 화면(품목별/사용처별, 일별/월별, 기간 지정, 상세 내역) 및 **프린트**(A4 인쇄 레이아웃)                                                       | —                                       |
+| 5    | 품목 사진                   | 품목 등록·입고 시 사진 등록, 검색 결과·목록·상세·이력에 사진 표시. 사진은 브라우저에서 줄여(긴 변 1280px, 미리보기 320px) JPEG로 저장                                                                                                                                     | 003 `item_photos`                       |
+| 6    | 사진 위치·크기, 관리자 권한 | 사진을 품목 정보 **오른쪽**으로 옮기고 **1.5배** 확대. **관리자 비밀번호 로그인**(scrypt 해시, HttpOnly 세션 쿠키, 5회 실패 시 5분 잠금), 관리자 전용: 사용자 추가·삭제, 품목 삭제, 사용처 등록·삭제. **관리** 화면 추가. 사용자·품목 삭제는 이력 보존을 위해 삭제 표시만 | 004 비밀번호·잠금 컬럼, `deleted_at`    |
+| 7    | 사진 등록·변경              | 입출고 화면 상단과 품목 수정 화면에 **📷 사진 등록/변경** 버튼(입고·출고 모두, 고르면 바로 저장), 새 품목 등록 폼의 사진 칸을 품목명 아래로 이동                                                                                                                          | —                                       |
+| 8    | 관리 화면 수정 버튼         | 사용자 관리(이름·권한·관리자 비밀번호 재설정)와 사용처 관리(이름)에 **수정** 버튼 추가. 본인 권한 변경과 마지막 관리자 강등은 차단                                                                                                                                        | —                                       |
+| 9    | 품목 등록 권한              | **품목 등록을 관리자 전용**으로 변경(서버 검사 + 일반 사용자 화면에서 등록 버튼 숨김)                                                                                                                                                                                     | —                                       |
+
+## 오류 및 해결 기록
+
+작업 중 발견한 오류와 해결 방법입니다. 같은 문제가 다시 생기면 참고하세요.
+
+| 증상                                                                         | 원인                                                                                                                      | 해결                                                                                                         |
+| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| 로컬 미리보기 서버가 시작되지 않음 (`"local" cannot be used as a mode name`) | Vite에서 `local`은 `.env.local` 파일 규칙과 겹쳐 모드 이름으로 쓸 수 없음                                                 | 모드 이름을 `preview-db`로 변경 (`npm run dev:local` → `vite --mode preview-db`)                             |
+| 로컬 미리보기에서 입출고 등록 시 500 오류 (`DATABASE_URL is not set`)        | 로컬용 DB로 바꿔 끼우는 규칙이 `../_lib/db.js` 경로만 인식해서, `auth.js`가 쓰는 `./db.js` 경로는 운영용 DB 모듈을 불러옴 | 가져오는 경로를 절대 경로로 바꿔 비교하도록 수정 ([scripts/vite-local-api.js](scripts/vite-local-api.js))    |
+| 위 수정 후에도 같은 오류                                                     | 폴더 이름의 공백이 모듈 경로에서 `%20`(`바탕%20화면`)으로 인코딩되어 경로 비교가 실패함                                   | 경로를 `decodeURI`로 디코딩한 뒤 비교                                                                        |
+| 테스트로 넣은 기록의 한글이 깨짐 (`3�� ȸ�ǽ�`)                                | 앱 문제가 아니라 Windows 터미널의 `curl`이 한글을 CP949로 보냄 (브라우저는 UTF-8로 보냄)                                  | 깨진 테스트 데이터를 지우기 위해 로컬 DB 초기화. 터미널에서 한글 데이터를 보내 테스트하지 않음               |
+| 입출고 현황 집계 쿼리 작성 시 우려                                           | SQL 조각을 다른 SQL 안에 중첩해 넣는 방식은 Neon 드라이버와 로컬 DB에서 동작이 보장되지 않음                              | 기간 경계를 CTE(`WITH b AS …`) 한 곳에서 계산하고 각 쿼리를 단일 SQL 문으로 작성                             |
+| 관리자 기능 작업 중단 후 관리자 이름으로 입출고 기록 불가, 사용자 추가 불가  | 관리자 로그인 작업이 절반만 반영됨 (로그인 API 없이 관리자 세션 검사만 적용)                                              | 작업 전 상태로 되돌린 뒤, 사진 기능 다음에 관리자 기능을 처음부터 다시 구현                                  |
+| "사진을 등록할 수 있는 화면이 없음"                                          | 사진 칸이 새 품목 폼 맨 아래와 '입고' 선택 시 폼 맨 아래에만 있었고, 품목 수정·출고 화면에는 없었음                       | 입출고 화면 상단과 품목 수정 화면에 바로 저장되는 사진 등록/변경 버튼 추가, 새 품목 폼의 사진 칸을 위로 이동 |
+
+### 알아둘 동작 (오류 아님)
+
+- **사용처 이름을 바꿔도 지난 출고 이력은 기록 당시 이름을 유지합니다** (원장 원칙). 그래서 사용처별 현황에서는 옛 이름과 새 이름이 따로 집계됩니다.
+- 로컬 미리보기의 관리자 초기 비밀번호는 `admin1234`입니다. 비밀번호를 5회 틀리면 5분간 잠기며, 운영에서는 `npm run admin:password`로 다시 설정하면 잠금도 풀립니다.
+- 관리자 세션은 12시간 뒤 만료되고, 비밀번호를 바꾸면 다른 기기의 로그인은 해제됩니다.

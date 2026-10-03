@@ -1,0 +1,22 @@
+.confirm {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--out);
+  border-radius: var(--radius);
+  background: var(--out-bg);
+}
+
+.message {
+  color: var(--out);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.buttons {
+  display: inline-flex;
+  gap: var(--space-1);
+}
