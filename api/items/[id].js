@@ -1,5 +1,5 @@
 import { getSql } from '../_lib/db.js';
-import { requireAdmin, requireUser } from '../_lib/auth.js';
+import { requireAdmin } from '../_lib/auth.js';
 import { HttpError, ok, route } from '../_lib/response.js';
 import { idParam, itemUpdate } from '../_lib/validate.js';
 import { toItem } from '../_lib/mappers.js';
@@ -19,8 +19,9 @@ export default route({
     ok(res, toItem(rows[0]));
   },
 
+  /** 품목 수정 (관리자 전용). 보유수량은 입출고로만 변경 */
   async PATCH(req, res) {
-    await requireUser(req);
+    await requireAdmin(req);
     const id = idParam.parse(req.query.id);
     const body = req.body ?? {};
     const input = itemUpdate.parse(body);

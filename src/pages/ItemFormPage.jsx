@@ -39,12 +39,14 @@ export default function ItemFormPage() {
 
   let title = '품목 수정';
   let body;
-  if (isNew && !isAdmin) {
-    title = '품목 등록';
+  if (!isAdmin) {
+    if (isNew) title = '품목 등록';
     body = (
       <StatusView
         kind="error"
-        title="품목 등록은 관리자만 할 수 있습니다"
+        title={
+          isNew ? '품목 등록은 관리자만 할 수 있습니다' : '품목 수정은 관리자만 할 수 있습니다'
+        }
         description="상단의 사용자 선택에서 관리자로 로그인하세요."
       />
     );

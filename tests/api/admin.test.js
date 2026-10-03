@@ -207,11 +207,11 @@ r = await call(movements, {
 check('삭제된 품목에 입고 → 404', r.status === 404, r.body);
 r = await call(itemById, {
   method: 'PATCH',
-  userId: mid,
+  cookie,
   query: { id: '1' },
   body: { unitCost: 1 },
 });
-check('삭제된 품목 수정 → 404', r.status === 404, r.body);
+check('삭제된 품목 수정(관리자) → 404', r.status === 404, r.body);
 r = await call(itemById, { method: 'DELETE', cookie, query: { id: '1' } });
 check('이미 삭제된 품목 다시 삭제 → 404', r.status === 404, r.body);
 const today = new Date().toISOString().slice(0, 10);

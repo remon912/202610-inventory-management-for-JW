@@ -127,9 +127,11 @@ export default function ItemDetailPage() {
           >
             − 출고
           </Link>
-          <Link to={`/items/${item.id}/edit`} className="btn btn-secondary">
-            품목 수정
-          </Link>
+          {isAdmin && (
+            <Link to={`/items/${item.id}/edit`} className="btn btn-secondary">
+              품목 수정
+            </Link>
+          )}
           {isAdmin && (
             <ConfirmButton
               label="품목 삭제"

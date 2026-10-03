@@ -31,7 +31,31 @@ r = await call(itemById, {
   query: { id: String(id) },
   body: { unitCost: 120 },
 });
-check('품목 수정은 일반 사용자도 가능 → 200', r.status === 200, r.body);
+check(
+  '품목 수정: 일반 사용자 → 401 ADMIN_LOGIN_REQUIRED',
+  r.status === 401 && r.body.error.code === 'ADMIN_LOGIN_REQUIRED',
+  r.body,
+);
+r = await call(itemById, {
+  method: 'PATCH',
+  userId: adminId,
+  query: { id: String(id) },
+  body: { unitCost: 120 },
+});
+check('품목 수정: 관리자 ID만 보내고 로그인 없음 → 401', r.status === 401, r.body);
+r = await call(itemById, {
+  method: 'PATCH',
+  cookie,
+  query: { id: String(id) },
+  body: { unitCost: 120, supplier: '대한상사' },
+});
+check(
+  '품목 수정: 관리자 로그인 → 200',
+  r.status === 200 && r.body.data.unitCost === 120 && r.body.data.supplier === '대한상사',
+  r.body,
+);
+r = await call(itemById, { query: { id: String(id) } });
+check('품목 조회는 누구나 가능', r.status === 200, r.body);
 r = await call(movements, {
   method: 'POST',
   userId: mid,
