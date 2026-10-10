@@ -91,3 +91,42 @@
   max-width: 160px;
   text-align: center;
 }
+
+/* 품목 수정 화면: 사진 관리 (추가 + 사진별 삭제) */
+.manager {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+.managerList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.managerItem {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  width: 136px;
+}
+.managerThumb {
+  position: relative;
+  display: block;
+  border-radius: var(--radius-sm);
+}
+.mainBadge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--on-primary);
+  font-size: 12px;
+  font-weight: 700;
+}

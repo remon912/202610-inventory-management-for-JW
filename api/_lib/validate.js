@@ -79,6 +79,15 @@ export const itemCreate = z.object({
   photo: photoInput,
 });
 
+/** 품목 일괄 등록 (엑셀 업로드·여러 줄 입력): 최대 500개, 사진 제외 */
+export const MAX_BULK_ITEMS = 500;
+export const itemBulkCreate = z.object({
+  items: z
+    .array(itemCreate.omit({ photo: true }), { error: '등록할 품목 목록이 없습니다.' })
+    .min(1, '등록할 품목이 없습니다.')
+    .max(MAX_BULK_ITEMS, `한 번에 ${MAX_BULK_ITEMS}개까지 등록할 수 있습니다.`),
+});
+
 export const itemUpdate = z.strictObject(
   {
     name: requiredText(100, '품목명').optional(),

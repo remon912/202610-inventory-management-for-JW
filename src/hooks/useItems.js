@@ -47,6 +47,31 @@ export function useAddItemPhoto(id) {
   });
 }
 
+/** 품목 일괄 등록 (관리자 전용) */
+export function useBulkCreateItems() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: api.bulkCreateItems,
+    onSuccess: () => qc.invalidateQueries({ queryKey: itemKeys.all }),
+  });
+}
+
+/** 사진 삭제 (관리자 전용). 남은 사진 중 최신 사진이 대표가 된다 */
+export function useDeletePhoto(itemId) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: api.deletePhoto,
+    onSuccess: (res) => {
+      qc.setQueryData(itemKeys.photos(itemId), (prev) => prev?.filter((p) => p.id !== res.id));
+      qc.setQueryData(itemKeys.detail(itemId), (prev) =>
+        prev ? { ...prev, photoId: res.photoId } : prev,
+      );
+      qc.invalidateQueries({ queryKey: itemKeys.all });
+      qc.invalidateQueries({ queryKey: ['movements', String(itemId)] }); // 이력의 사진 표시
+    },
+  });
+}
+
 export function useCreateItem() {
   const qc = useQueryClient();
   return useMutation({

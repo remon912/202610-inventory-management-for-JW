@@ -1,5 +1,5 @@
 import { useId, useRef, useState } from 'react';
-import ItemPhotoEditor from './ItemPhotoEditor.jsx';
+import ItemPhotoManager from './ItemPhotoManager.jsx';
 import PhotoInput from './PhotoInput.jsx';
 import { useCurrentUser } from '../hooks/useCurrentUser.js';
 import { formatNumber, parseIntInput, parseMoneyInput } from '../lib/format.js';
@@ -120,12 +120,7 @@ export default function ItemForm({
       {!isNew && (
         <div className="field">
           <span className="field-label">사진</span>
-          <div className={styles.photoRow}>
-            <ItemPhotoEditor item={item} />
-            <p className="field-hint">
-              사진을 고르면 바로 저장되고 대표 사진이 바뀝니다. 이전 사진은 품목 상세에 남습니다.
-            </p>
-          </div>
+          <ItemPhotoManager item={item} />
         </div>
       )}
 

@@ -4,6 +4,7 @@ import StatusView from './components/StatusView.jsx';
 import ItemListPage from './pages/ItemListPage.jsx';
 import ItemDetailPage from './pages/ItemDetailPage.jsx';
 import ItemFormPage from './pages/ItemFormPage.jsx';
+import ItemBulkPage from './pages/ItemBulkPage.jsx';
 import MovementPage from './pages/MovementPage.jsx';
 import ReportPage from './pages/ReportPage.jsx';
 import AdminPage from './pages/AdminPage.jsx';
@@ -14,6 +15,7 @@ export default function App() {
       <Route element={<Layout />}>
         <Route index element={<ItemListPage />} />
         <Route path="items/new" element={<ItemFormPage />} />
+        <Route path="items/bulk" element={<ItemBulkPage />} />
         <Route path="items/:id" element={<ItemDetailPage />} />
         <Route path="items/:id/edit" element={<ItemFormPage />} />
         <Route path="items/:id/move" element={<MovementPage />} />

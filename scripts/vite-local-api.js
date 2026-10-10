@@ -10,6 +10,7 @@ const apiDb = path.join(root, 'api', '_lib', 'db.js').replaceAll('\\', '/');
 
 const ROUTES = [
   [/^\/api\/items\/?$/, 'api/items/index.js'],
+  [/^\/api\/items\/bulk\/?$/, 'api/items/bulk.js'],
   [/^\/api\/items\/([^/]+)\/movements\/?$/, 'api/items/[id]/movements.js'],
   [/^\/api\/items\/([^/]+)\/photos\/?$/, 'api/items/[id]/photos.js'],
   [/^\/api\/photos\/([^/]+)\/?$/, 'api/photos/[id].js'],

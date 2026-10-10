@@ -53,13 +53,19 @@ export default function ItemFormPage() {
   } else if (isNew && draftName === null) {
     title = '품목 등록';
     body = (
-      <ItemSearch
-        items={allItems}
-        isPending={allQuery.isPending}
-        isError={allQuery.isError && !allQuery.data}
-        onRetry={() => allQuery.refetch()}
-        onAdd={setDraftName}
-      />
+      <>
+        <p className={styles.bulkHint}>
+          여러 품목을 한꺼번에 등록하려면{' '}
+          <Link to="/items/bulk">📄 일괄 등록 (엑셀 첨부·여러 줄 입력)</Link>을 이용하세요.
+        </p>
+        <ItemSearch
+          items={allItems}
+          isPending={allQuery.isPending}
+          isError={allQuery.isError && !allQuery.data}
+          onRetry={() => allQuery.refetch()}
+          onAdd={setDraftName}
+        />
+      </>
     );
   } else if (isNew) {
     title = '새 품목 추가';

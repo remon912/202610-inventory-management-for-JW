@@ -115,6 +115,11 @@ export default function ItemListPage() {
     <div className={styles.page}>
       <div className={styles.titleRow}>
         <h1 className={styles.title}>품목</h1>
+        {isAdmin && (
+          <Link to="/items/bulk" className="btn btn-secondary btn-sm">
+            📄 일괄 등록 (엑셀·여러 줄)
+          </Link>
+        )}
       </div>
 
       <search className={styles.filters} aria-label="품목 검색">

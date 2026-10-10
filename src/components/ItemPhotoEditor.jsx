@@ -9,7 +9,7 @@ import styles from './Photo.module.css';
  * 기존 품목의 대표 사진 + 사진 등록/변경 버튼.
  * 사진을 고르면 바로 저장되고, 새 사진이 대표 사진이 된다 (이전 사진은 상세 화면에 보존).
  */
-export default function ItemPhotoEditor({ item, size = 96 }) {
+export default function ItemPhotoEditor({ item, size = 96, showThumb = true, label }) {
   const fileRef = useRef(null);
   const add = useAddItemPhoto(item.id);
   const { toast } = useToast();
@@ -35,12 +35,14 @@ export default function ItemPhotoEditor({ item, size = 96 }) {
 
   return (
     <div className={styles.editor}>
-      <ItemThumb
-        photoId={item.photoId}
-        name={item.name}
-        size={size}
-        alt={item.photoId ? `${item.name} 대표 사진` : ''}
-      />
+      {showThumb && (
+        <ItemThumb
+          photoId={item.photoId}
+          name={item.name}
+          size={size}
+          alt={item.photoId ? `${item.name} 대표 사진` : ''}
+        />
+      )}
       <input ref={fileRef} type="file" accept="image/*" hidden onChange={onFile} />
       <button
         type="button"
@@ -48,7 +50,7 @@ export default function ItemPhotoEditor({ item, size = 96 }) {
         onClick={() => fileRef.current?.click()}
         disabled={busy}
       >
-        {busy ? '사진 올리는 중…' : item.photoId ? '📷 사진 변경' : '📷 사진 등록'}
+        {busy ? '사진 올리는 중…' : (label ?? (item.photoId ? '📷 사진 변경' : '📷 사진 등록'))}
       </button>
       {error && (
         <p className="field-error" role="alert">

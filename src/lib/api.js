@@ -82,9 +82,11 @@ export const api = {
   listItems: ({ q, location } = {}, opts) => request(`/items${query({ q, location })}`, opts),
   getItem: (id, opts) => request(`/items/${id}`, opts),
   createItem: (input) => request('/items', { method: 'POST', body: input }),
+  bulkCreateItems: (items) => request('/items/bulk', { method: 'POST', body: { items } }),
   updateItem: (id, input) => request(`/items/${id}`, { method: 'PATCH', body: input }),
   listMovements: (itemId, opts) => request(`/items/${itemId}/movements`, opts),
   listItemPhotos: (itemId, opts) => request(`/items/${itemId}/photos`, opts),
+  deletePhoto: (id) => request(`/photos/${id}`, { method: 'DELETE' }),
   addItemPhoto: (itemId, photo) =>
     request(`/items/${itemId}/photos`, { method: 'POST', body: { photo } }),
   createMovement: (input) => request('/movements', { method: 'POST', body: input }),
