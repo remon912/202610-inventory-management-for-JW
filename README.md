@@ -77,14 +77,39 @@ npm run dev                     # vercel dev: 프론트 + API 동시 실행 (htt
 - 로컬은 `.env.local`(Git 제외), 운영은 Vercel 프로젝트 환경변수에 등록합니다.
 - 비밀값에 `VITE_` 접두사를 붙이지 마세요. 브라우저 번들에 노출됩니다.
 
-## 배포 (Vercel)
+## 배포 (Vercel + Neon)
 
-1. GitHub 저장소에 푸시
-2. Vercel에서 저장소 Import (Framework: Vite, 자동 감지)
-3. Settings → Environment Variables에 `DATABASE_URL` 등록
-4. `main` 푸시 시 운영 배포, PR마다 Preview 배포
+### 처음 배포할 때
 
-작업 흐름: `feature/기능명` 브랜치 → Conventional Commits (`feat:`, `fix:`, `docs:` …) → PR → Preview 확인 → `main` 병합
+1. **Neon**에서 재고관리 전용 프로젝트 생성 (Region: AWS Asia Pacific 1 **Singapore**) → **Connect**에서 접속 주소 복사
+2. 내 컴퓨터 `.env.local`의 `DATABASE_URL`에 주소 저장 → `npm run db:seed` (테이블 + 초기 사용자) → `npm run test:concurrency` (선택, 동시 출고 검사)
+3. 관리자 비밀번호 설정: `npm run admin:password -- "관리자" "새비밀번호"`
+4. **Vercel**에서 GitHub 저장소 Import (Framework: Vite, 자동 감지)
+5. **Settings → Environment Variables** (Production): `DATABASE_URL`(Neon 주소), `SESSION_SECRET`(32자 이상 새 무작위 값)
+6. **Settings → Functions → Function Region**을 Neon과 같은 **Singapore (sin1)**로
+7. **Deployments → ⋯ → Redeploy** (환경변수는 다시 배포해야 적용) → 접속해 사용자 선택·관리자 로그인 확인
+
+이후에는 `main`에 푸시하면 자동으로 다시 배포됩니다. 환경변수를 Preview에도 넣으면 PR 미리보기 배포가 운영 DB를 같이 쓰므로 처음에는 Production에만 넣습니다.
+
+> Vercel Hobby(무료) 플랜은 배포당 서버 함수 12개까지라, 모든 API는 함수 하나(`api/router.js`)에서 처리합니다. 새 API는 `api/_routes/`에 만들고 `api/_lib/router.js`에 등록하세요.
+
+### 진행 상황
+
+| 단계                                                                    | 상태                                    |
+| ----------------------------------------------------------------------- | --------------------------------------- |
+| GitHub 저장소 연결 (`remon912/202610-inventory-management-for-JW`)      | 완료                                    |
+| Vercel 프로젝트 Import·빌드                                             | 완료 (함수 개수 문제 해결 후 빌드 성공) |
+| Neon 프로젝트 `inventory` (Singapore, branch `production`, DB `neondb`) | 완료 (2026-10-10)                       |
+| 테이블 생성·초기 사용자 (`db:seed`, 마이그레이션 001~004)               | 완료 (2026-10-10)                       |
+| 실제 DB 동시 출고 검사 (`test:concurrency`)                             | 통과 (2026-10-10)                       |
+| 운영 관리자 비밀번호 설정 (`admin:password`)                            | **남음**                                |
+| Vercel 환경변수 `DATABASE_URL`, `SESSION_SECRET`                        | **남음**                                |
+| Vercel Function Region → Singapore                                      | **남음**                                |
+| Redeploy 후 접속 확인, README 맨 위 배포 URL 기재                       | **남음**                                |
+
+### 작업 흐름
+
+`feature/기능명` 브랜치 → Conventional Commits (`feat:`, `fix:`, `docs:` …) → PR → Preview 확인 → `main` 병합
 
 ## 설계 메모
 
