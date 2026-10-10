@@ -1,7 +1,7 @@
-import { getSql } from '../../_lib/db.js';
-import { HttpError, ok, route } from '../../_lib/response.js';
-import { idParam, movementListQuery } from '../../_lib/validate.js';
-import { toMovement } from '../../_lib/mappers.js';
+import { getSql } from '../../../_lib/db.js';
+import { HttpError, ok, route } from '../../../_lib/response.js';
+import { idParam, movementListQuery } from '../../../_lib/validate.js';
+import { toMovement } from '../../../_lib/mappers.js';
 
 export default route({
   async GET(req, res) {

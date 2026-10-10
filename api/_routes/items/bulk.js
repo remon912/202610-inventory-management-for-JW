@@ -1,8 +1,8 @@
-import { getSql } from '../_lib/db.js';
-import { requireAdmin } from '../_lib/auth.js';
-import { HttpError, ok, route } from '../_lib/response.js';
-import { itemBulkCreate } from '../_lib/validate.js';
-import { toItem } from '../_lib/mappers.js';
+import { getSql } from '../../_lib/db.js';
+import { requireAdmin } from '../../_lib/auth.js';
+import { HttpError, ok, route } from '../../_lib/response.js';
+import { itemBulkCreate } from '../../_lib/validate.js';
+import { toItem } from '../../_lib/mappers.js';
 
 const key = (name) => name.trim().toLowerCase();
 

@@ -1,7 +1,7 @@
-import { getSql } from '../_lib/db.js';
-import { requireAdmin } from '../_lib/auth.js';
-import { HttpError, ok, route } from '../_lib/response.js';
-import { idParam, usagePlaceUpdate } from '../_lib/validate.js';
+import { getSql } from '../../_lib/db.js';
+import { requireAdmin } from '../../_lib/auth.js';
+import { HttpError, ok, route } from '../../_lib/response.js';
+import { idParam, usagePlaceUpdate } from '../../_lib/validate.js';
 
 const notFound = () => new HttpError(404, 'USAGE_PLACE_NOT_FOUND', '사용처를 찾을 수 없습니다.');
 const toPlace = (r) => ({ id: Number(r.id), name: r.name });

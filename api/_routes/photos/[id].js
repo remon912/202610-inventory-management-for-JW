@@ -1,7 +1,7 @@
-import { getSql } from '../_lib/db.js';
-import { requireAdmin } from '../_lib/auth.js';
-import { HttpError, ok, route } from '../_lib/response.js';
-import { idParam } from '../_lib/validate.js';
+import { getSql } from '../../_lib/db.js';
+import { requireAdmin } from '../../_lib/auth.js';
+import { HttpError, ok, route } from '../../_lib/response.js';
+import { idParam } from '../../_lib/validate.js';
 
 /**
  * 사진 이미지 반환. GET /api/photos/:id (원본) · /api/photos/:id?size=thumb (미리보기)

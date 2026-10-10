@@ -1,5 +1,5 @@
 // 로컬 미리보기 전용 Vite 플러그인 (npm run dev:local)
-// Vercel 함수(api/*)를 그대로 불러와 /api 요청을 처리하고, DB 모듈만 PGlite로 바꿔 끼운다.
+// 배포와 같은 진입점(api/router.js → api/_lib/router.js)으로 /api 요청을 처리하고, DB 모듈만 PGlite로 바꿔 끼운다.
 import { randomBytes } from 'node:crypto';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
@@ -7,25 +7,6 @@ import path from 'node:path';
 const root = path.resolve(import.meta.dirname, '..');
 const localDb = path.join(root, 'scripts', 'local-db.js').replaceAll('\\', '/');
 const apiDb = path.join(root, 'api', '_lib', 'db.js').replaceAll('\\', '/');
-
-const ROUTES = [
-  [/^\/api\/items\/?$/, 'api/items/index.js'],
-  [/^\/api\/items\/bulk\/?$/, 'api/items/bulk.js'],
-  [/^\/api\/items\/([^/]+)\/movements\/?$/, 'api/items/[id]/movements.js'],
-  [/^\/api\/items\/([^/]+)\/photos\/?$/, 'api/items/[id]/photos.js'],
-  [/^\/api\/photos\/([^/]+)\/?$/, 'api/photos/[id].js'],
-  [/^\/api\/items\/([^/]+)\/?$/, 'api/items/[id].js'],
-  [/^\/api\/movements\/?$/, 'api/movements.js'],
-  [/^\/api\/users\/?$/, 'api/users/index.js'],
-  [/^\/api\/users\/([^/]+)\/?$/, 'api/users/[id].js'],
-  [/^\/api\/usage-places\/?$/, 'api/usage-places/index.js'],
-  [/^\/api\/usage-places\/([^/]+)\/?$/, 'api/usage-places/[id].js'],
-  [/^\/api\/auth\/login\/?$/, 'api/auth/login.js'],
-  [/^\/api\/auth\/logout\/?$/, 'api/auth/logout.js'],
-  [/^\/api\/auth\/me\/?$/, 'api/auth/me.js'],
-  [/^\/api\/auth\/password\/?$/, 'api/auth/password.js'],
-  [/^\/api\/reports\/?$/, 'api/reports.js'],
-];
 
 async function readJson(req) {
   const chunks = [];
@@ -61,26 +42,18 @@ export default function localApi() {
         const url = new URL(req.url, 'http://localhost');
         if (!url.pathname.startsWith('/api/')) return next();
 
-        const match = ROUTES.map(([re, file]) => [url.pathname.match(re), file]).find(([m]) => m);
         const send = (status, payload) => {
           res.statusCode = status;
           res.setHeader('Content-Type', 'application/json; charset=utf-8');
           res.end(JSON.stringify(payload));
         };
-        if (!match) {
-          return send(404, { ok: false, error: { code: 'NOT_FOUND', message: '없는 API입니다.' } });
-        }
-
-        const [m, file] = match;
-        const query = Object.fromEntries(url.searchParams);
-        if (m[1]) query.id = decodeURIComponent(m[1]);
-        req.query = query;
+        req.query = Object.fromEntries(url.searchParams);
         req.body = await readJson(req);
         res.status = (code) => ((res.statusCode = code), res);
         res.json = (payload) => send(res.statusCode, payload);
 
         try {
-          const mod = await server.ssrLoadModule(path.join(root, file));
+          const mod = await server.ssrLoadModule(path.join(root, 'api', 'router.js'));
           await mod.default(req, res);
         } catch (err) {
           console.error('[local-api]', err);

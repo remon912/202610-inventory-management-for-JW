@@ -1,9 +1,9 @@
-import { getSql } from '../_lib/db.js';
-import { requireAdmin } from '../_lib/auth.js';
-import { hashPassword, verifyPassword } from '../_lib/password.js';
-import { HttpError, ok, route } from '../_lib/response.js';
-import { setSessionCookie } from '../_lib/session.js';
-import { passwordChange } from '../_lib/validate.js';
+import { getSql } from '../../_lib/db.js';
+import { requireAdmin } from '../../_lib/auth.js';
+import { hashPassword, verifyPassword } from '../../_lib/password.js';
+import { HttpError, ok, route } from '../../_lib/response.js';
+import { setSessionCookie } from '../../_lib/session.js';
+import { passwordChange } from '../../_lib/validate.js';
 
 /** 로그인한 관리자의 비밀번호 변경. 다른 기기의 기존 세션은 무효가 된다. */
 export default route({

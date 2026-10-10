@@ -1,9 +1,9 @@
 import { readFile } from 'node:fs/promises';
 import { pg } from '../../api/_lib/db.js';
 import { adminLogin, call, check, done, memberId } from './harness.js';
-import bulk from '../../api/items/bulk.js';
-import items from '../../api/items/index.js';
-import itemPhotos from '../../api/items/[id]/photos.js';
+import bulk from '../../api/_routes/items/bulk.js';
+import items from '../../api/_routes/items/index.js';
+import itemPhotos from '../../api/_routes/items/[id]/photos.js';
 
 await pg.exec(await readFile('./db/schema.sql', 'utf8'));
 await pg.exec(await readFile('./db/seed.sql', 'utf8'));

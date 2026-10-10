@@ -1,8 +1,8 @@
-import { getSql } from '../_lib/db.js';
-import { requireAdmin } from '../_lib/auth.js';
-import { HttpError, ok, route } from '../_lib/response.js';
-import { idParam, itemUpdate } from '../_lib/validate.js';
-import { toItem } from '../_lib/mappers.js';
+import { getSql } from '../../_lib/db.js';
+import { requireAdmin } from '../../_lib/auth.js';
+import { HttpError, ok, route } from '../../_lib/response.js';
+import { idParam, itemUpdate } from '../../_lib/validate.js';
+import { toItem } from '../../_lib/mappers.js';
 
 const notFound = () => new HttpError(404, 'ITEM_NOT_FOUND', '품목을 찾을 수 없습니다.');
 

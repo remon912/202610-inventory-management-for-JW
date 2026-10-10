@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { pg } from '../../api/_lib/db.js';
-import users from '../../api/users/index.js';
-import reports from '../../api/reports.js';
+import users from '../../api/_routes/users/index.js';
+import reports from '../../api/_routes/reports.js';
 
 await pg.exec(await readFile('./db/schema.sql', 'utf8'));
 await pg.exec(await readFile('./db/seed.sql', 'utf8'));

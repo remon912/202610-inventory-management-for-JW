@@ -1,7 +1,7 @@
 // 공통 테스트 도구: 핸들러 호출, 관리자 로그인 쿠키
 import { pg } from '../../api/_lib/db.js';
 import { hashPassword } from '../../api/_lib/password.js';
-import login from '../../api/auth/login.js';
+import login from '../../api/_routes/auth/login.js';
 
 process.env.SESSION_SECRET ??= 'test-secret-test-secret-test-secret-1234';
 

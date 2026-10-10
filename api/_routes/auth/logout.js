@@ -1,5 +1,5 @@
-import { ok, route } from '../_lib/response.js';
-import { clearSessionCookie } from '../_lib/session.js';
+import { ok, route } from '../../_lib/response.js';
+import { clearSessionCookie } from '../../_lib/session.js';
 
 export default route({
   async POST(req, res) {

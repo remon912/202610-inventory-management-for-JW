@@ -1,6 +1,6 @@
-import { getSql } from './_lib/db.js';
-import { ok, route } from './_lib/response.js';
-import { reportQuery } from './_lib/validate.js';
+import { getSql } from '../_lib/db.js';
+import { ok, route } from '../_lib/response.js';
+import { reportQuery } from '../_lib/validate.js';
 
 const num = (v) => (v === null || v === undefined ? 0 : Number(v));
 

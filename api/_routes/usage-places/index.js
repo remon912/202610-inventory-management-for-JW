@@ -1,7 +1,7 @@
-import { getSql } from '../_lib/db.js';
-import { requireAdmin } from '../_lib/auth.js';
-import { ok, route } from '../_lib/response.js';
-import { usagePlaceCreate } from '../_lib/validate.js';
+import { getSql } from '../../_lib/db.js';
+import { requireAdmin } from '../../_lib/auth.js';
+import { ok, route } from '../../_lib/response.js';
+import { usagePlaceCreate } from '../../_lib/validate.js';
 
 const toPlace = (r) => ({ id: Number(r.id), name: r.name });
 

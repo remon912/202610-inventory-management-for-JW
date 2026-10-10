@@ -1,13 +1,13 @@
 import { readFile } from 'node:fs/promises';
 import { pg } from '../../api/_lib/db.js';
 import { adminLogin, call, check, done, memberId } from './harness.js';
-import login from '../../api/auth/login.js';
-import me from '../../api/auth/me.js';
-import users from '../../api/users/index.js';
-import userById from '../../api/users/[id].js';
-import places from '../../api/usage-places/index.js';
-import placeById from '../../api/usage-places/[id].js';
-import movements from '../../api/movements.js';
+import login from '../../api/_routes/auth/login.js';
+import me from '../../api/_routes/auth/me.js';
+import users from '../../api/_routes/users/index.js';
+import userById from '../../api/_routes/users/[id].js';
+import places from '../../api/_routes/usage-places/index.js';
+import placeById from '../../api/_routes/usage-places/[id].js';
+import movements from '../../api/_routes/movements.js';
 
 await pg.exec(await readFile('./db/schema.sql', 'utf8'));
 await pg.exec(await readFile('./db/seed.sql', 'utf8'));

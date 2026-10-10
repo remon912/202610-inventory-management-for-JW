@@ -1,9 +1,9 @@
-import { getSql } from './_lib/db.js';
-import { requireUser } from './_lib/auth.js';
-import { HttpError, ok, route } from './_lib/response.js';
-import { movementCreate } from './_lib/validate.js';
-import { recordMovement } from './_lib/movement.js';
-import { toMovement } from './_lib/mappers.js';
+import { getSql } from '../_lib/db.js';
+import { requireUser } from '../_lib/auth.js';
+import { HttpError, ok, route } from '../_lib/response.js';
+import { movementCreate } from '../_lib/validate.js';
+import { recordMovement } from '../_lib/movement.js';
+import { toMovement } from '../_lib/mappers.js';
 
 export default route({
   async POST(req, res) {

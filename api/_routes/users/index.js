@@ -1,8 +1,8 @@
-import { getSql } from '../_lib/db.js';
-import { requireAdmin } from '../_lib/auth.js';
-import { hashPassword } from '../_lib/password.js';
-import { HttpError, ok, route } from '../_lib/response.js';
-import { userCreate } from '../_lib/validate.js';
+import { getSql } from '../../_lib/db.js';
+import { requireAdmin } from '../../_lib/auth.js';
+import { hashPassword } from '../../_lib/password.js';
+import { HttpError, ok, route } from '../../_lib/response.js';
+import { userCreate } from '../../_lib/validate.js';
 
 export default route({
   /** 삭제되지 않은 사용자 목록 (비밀번호 관련 정보는 내보내지 않음) */

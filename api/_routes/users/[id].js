@@ -1,8 +1,8 @@
-import { getSql } from '../_lib/db.js';
-import { requireAdmin } from '../_lib/auth.js';
-import { hashPassword } from '../_lib/password.js';
-import { HttpError, ok, route } from '../_lib/response.js';
-import { userUpdate, uuidParam } from '../_lib/validate.js';
+import { getSql } from '../../_lib/db.js';
+import { requireAdmin } from '../../_lib/auth.js';
+import { hashPassword } from '../../_lib/password.js';
+import { HttpError, ok, route } from '../../_lib/response.js';
+import { userUpdate, uuidParam } from '../../_lib/validate.js';
 
 const lastAdmin = () =>
   new HttpError(409, 'LAST_ADMIN', '마지막 관리자는 일반으로 바꾸거나 삭제할 수 없습니다.');

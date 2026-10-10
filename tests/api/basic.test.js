@@ -1,11 +1,11 @@
 import { readFile } from 'node:fs/promises';
 import { pg, sqlTag } from '../../api/_lib/db.js';
-import items from '../../api/items/index.js';
-import itemById from '../../api/items/[id].js';
-import itemMovements from '../../api/items/[id]/movements.js';
-import movements from '../../api/movements.js';
-import users from '../../api/users/index.js';
-import usagePlaces from '../../api/usage-places/index.js';
+import items from '../../api/_routes/items/index.js';
+import itemById from '../../api/_routes/items/[id].js';
+import itemMovements from '../../api/_routes/items/[id]/movements.js';
+import movements from '../../api/_routes/movements.js';
+import users from '../../api/_routes/users/index.js';
+import usagePlaces from '../../api/_routes/usage-places/index.js';
 import { recordMovement } from '../../api/_lib/movement.js';
 
 await pg.exec(await readFile('./db/schema.sql', 'utf8'));

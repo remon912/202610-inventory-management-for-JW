@@ -1,7 +1,7 @@
-import { getSql } from '../../_lib/db.js';
-import { requireUser } from '../../_lib/auth.js';
-import { HttpError, ok, route } from '../../_lib/response.js';
-import { idParam, photoCreate } from '../../_lib/validate.js';
+import { getSql } from '../../../_lib/db.js';
+import { requireUser } from '../../../_lib/auth.js';
+import { HttpError, ok, route } from '../../../_lib/response.js';
+import { idParam, photoCreate } from '../../../_lib/validate.js';
 
 /** 품목 사진 목록 (최신순). 이미지는 /api/photos/:id 로 불러온다. */
 export default route({

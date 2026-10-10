@@ -1,8 +1,8 @@
-import { getSql } from '../_lib/db.js';
-import { verifyPassword } from '../_lib/password.js';
-import { HttpError, ok, route } from '../_lib/response.js';
-import { setSessionCookie } from '../_lib/session.js';
-import { loginInput } from '../_lib/validate.js';
+import { getSql } from '../../_lib/db.js';
+import { verifyPassword } from '../../_lib/password.js';
+import { HttpError, ok, route } from '../../_lib/response.js';
+import { setSessionCookie } from '../../_lib/session.js';
+import { loginInput } from '../../_lib/validate.js';
 
 const MAX_FAILURES = 5;
 const LOCK_MINUTES = 5;
