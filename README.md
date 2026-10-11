@@ -95,17 +95,17 @@ npm run dev                     # vercel dev: 프론트 + API 동시 실행 (htt
 
 ### 진행 상황
 
-| 단계                                                                    | 상태                                            |
-| ----------------------------------------------------------------------- | ----------------------------------------------- |
-| GitHub 저장소 연결 (`remon912/202610-inventory-management-for-JW`)      | 완료                                            |
-| Vercel 프로젝트 Import·빌드                                             | 완료 (함수 개수 문제 해결 후 빌드 성공)         |
-| Neon 프로젝트 `inventory` (Singapore, branch `production`, DB `neondb`) | 완료 (2026-10-10)                               |
-| 테이블 생성·초기 사용자 (`db:seed`, 마이그레이션 001~004)               | 완료 (2026-10-10)                               |
-| 실제 DB 동시 출고 검사 (`test:concurrency`)                             | 통과 (2026-10-10)                               |
-| 운영 관리자 비밀번호 설정 (`admin:password`)                            | **남음** (`/api/health`의 adminPassword로 확인) |
-| Vercel 환경변수 `DATABASE_URL`, `SESSION_SECRET`                        | 완료 (2026-10-11)                               |
-| Vercel Function Region → Singapore                                      | **남음**                                        |
-| 재배포 후 접속 확인 (`/api/health` 정상), 배포 URL 기재                 | 완료 (2026-10-11)                               |
+| 단계                                                                    | 상태                                    |
+| ----------------------------------------------------------------------- | --------------------------------------- |
+| GitHub 저장소 연결 (`remon912/202610-inventory-management-for-JW`)      | 완료                                    |
+| Vercel 프로젝트 Import·빌드                                             | 완료 (함수 개수 문제 해결 후 빌드 성공) |
+| Neon 프로젝트 `inventory` (Singapore, branch `production`, DB `neondb`) | 완료 (2026-10-10)                       |
+| 테이블 생성·초기 사용자 (`db:seed`, 마이그레이션 001~004)               | 완료 (2026-10-10)                       |
+| 실제 DB 동시 출고 검사 (`test:concurrency`)                             | 통과 (2026-10-10)                       |
+| 운영 관리자 비밀번호 설정 (`admin:password`)                            | 완료 (2026-10-11, 로그인 확인)          |
+| Vercel 환경변수 `DATABASE_URL`, `SESSION_SECRET`                        | 완료 (2026-10-11)                       |
+| Vercel Function Region → Singapore                                      | **남음**                                |
+| 재배포 후 접속 확인 (`/api/health` 정상), 배포 URL 기재                 | 완료 (2026-10-11)                       |
 
 ### 작업 흐름
 
@@ -230,6 +230,7 @@ tests/api/      API·일괄 등록 테스트 (npm run test:api, 내장 DB 사용
 | "일괄 입력 화면에 수량이 없음"                                                                          | 입력표 최소 폭(1100px)이 화면 폭(960px)보다 넓어 오른쪽 수량 칸이 스크롤 뒤에 숨었고, 열 제목도 '초기 보유수량'이라 찾기 어려웠음 | 수량을 두 번째 열로 옮기고 제목을 '수량'으로, 이 화면의 폭을 넓힘                                                                                                                          |
 | Vercel 배포 실패: `No more than 12 Serverless Functions can be added to a Deployment on the Hobby plan` | `api/` 안의 파일 하나하나가 서버 함수가 되어 16개로 늘어남 (무료 플랜 최대 12개)                                                  | 함수 하나(`api/router.js`)가 모든 API를 나눠 처리하도록 변경. 앞으로 API를 추가할 때는 `api/_routes/`에 파일을 만들고 `api/_lib/router.js`의 ROUTES에 등록 (테스트가 함수 개수 1개를 검사) |
 | 배포 후 "사용자 목록을 불러오는 중…"에서 멈춤 (API 500)                                                 | Vercel 환경변수를 넣은 뒤 다시 배포하지 않아 서버가 DB 주소를 모름                                                                | 환경변수 저장 후 **Redeploy**(또는 푸시). 원인 확인용 `/api/health` 추가: 환경변수 유무·DB 연결·테이블·관리자 비밀번호 상태를 비밀값 없이 보여줌                                           |
+| 관리자 로그인 시 "관리자 비밀번호가 설정되지 않았거나 관리자가 아닙니다"                                | `npm run admin:password`를 터미널이 아닌 `.env.local` 편집기 화면에 입력해 실행되지 않음 (파일에 명령·안내 문구가 섞임)           | `.env.local` 정리 후 터미널에서 실행. 명령은 **VS Code 아래쪽 터미널 창**에 입력해야 함                                                                                                    |
 
 ### 알아둘 동작 (오류 아님)
 
