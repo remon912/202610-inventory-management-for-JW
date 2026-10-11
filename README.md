@@ -45,7 +45,7 @@ npm install
 cp .env.example .env.local      # DATABASE_URL에 Neon 접속 문자열 입력
 npm run db:migrate              # 테이블 생성
 npm run db:seed                 # 초기 사용자 3명 (db/seed.sql을 실제 인원으로 수정)
-npm run admin:password -- "관리자" "새비밀번호"   # 관리자 비밀번호 설정 (최초 1회)
+npm run admin:password   # 관리자 비밀번호 설정 (최초 1회)
 vercel link                     # 최초 1회, Vercel 프로젝트 연결
 npm run dev                     # vercel dev: 프론트 + API 동시 실행 (http://localhost:3000)
 ```
@@ -83,7 +83,7 @@ npm run dev                     # vercel dev: 프론트 + API 동시 실행 (htt
 
 1. **Neon**에서 재고관리 전용 프로젝트 생성 (Region: AWS Asia Pacific 1 **Singapore**) → **Connect**에서 접속 주소 복사
 2. 내 컴퓨터 `.env.local`의 `DATABASE_URL`에 주소 저장 → `npm run db:seed` (테이블 + 초기 사용자) → `npm run test:concurrency` (선택, 동시 출고 검사)
-3. 관리자 비밀번호 설정: `npm run admin:password -- "관리자" "새비밀번호"`
+3. 관리자 비밀번호 설정: `npm run admin:password`
 4. **Vercel**에서 GitHub 저장소 Import (Framework: Vite, 자동 감지)
 5. **Settings → Environment Variables** (Production): `DATABASE_URL`(Neon 주소), `SESSION_SECRET`(32자 이상 새 무작위 값)
 6. **Settings → Functions → Function Region**을 Neon과 같은 **Singapore (sin1)**로
