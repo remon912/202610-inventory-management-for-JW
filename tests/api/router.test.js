@@ -50,7 +50,7 @@ const walk = (dir) => {
 };
 walk('api');
 check('Vercel 함수는 api/router.js 하나 (Hobby 플랜 12개 제한)', fnFiles.length === 1, fnFiles);
-check('라우팅 표에 16개 API', ROUTES.length === 16, ROUTES.length);
+check('라우팅 표에 17개 API (점검용 health 포함)', ROUTES.length === 17, ROUTES.length);
 
 // ── Vercel 방식: /api/router?__path=... ──
 let r = await hit('/api/router?__path=users');
@@ -115,5 +115,32 @@ r = await hit(`/api/items/${id}`);
 check('원래 주소 /api/items/:id 도 처리', r.statusCode === 200 && r.body.data.id === id, r.body);
 r = await hit('/api/users/');
 check('끝에 / 가 있어도 처리', r.statusCode === 200, r.body);
+
+// ── 배포 점검 /api/health: 비밀값 없이 상태만 ──
+process.env.DATABASE_URL ??= 'postgresql://test-user:test-pass@test-host/testdb'; // 테스트는 내장 DB 사용, 값만 있으면 됨
+r = await hit('/api/router?__path=health');
+check(
+  'health: DB 정상·사용자 수·관리자 비밀번호 상태',
+  r.statusCode === 200 &&
+    r.body.data.database === '정상' &&
+    r.body.data.users === 3 &&
+    r.body.data.adminPassword === '설정됨',
+  r.body,
+);
+const leaked = JSON.stringify(r.body);
+check(
+  'health 응답에 주소·키 값이 없음',
+  !/postgres|neon|secret-/i.test(leaked.replace('postgresql:// ', '')),
+  leaked,
+);
+const savedUrl = process.env.DATABASE_URL;
+delete process.env.DATABASE_URL;
+r = await hit('/api/router?__path=health');
+check(
+  'health: DATABASE_URL 없으면 그렇게 알려줌',
+  r.body.data.databaseUrl === '없음' && r.body.data.database.includes('없음'),
+  r.body,
+);
+if (savedUrl !== undefined) process.env.DATABASE_URL = savedUrl;
 
 done();

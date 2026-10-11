@@ -18,6 +18,7 @@ import logout from '../_routes/auth/logout.js';
 import me from '../_routes/auth/me.js';
 import password from '../_routes/auth/password.js';
 import reports from '../_routes/reports.js';
+import health from '../_routes/health.js';
 
 // [주소 패턴, 처리 함수] — 위에서부터 먼저 맞는 것을 쓴다. (:id는 req.query.id로 전달)
 export const ROUTES = [
@@ -37,6 +38,7 @@ export const ROUTES = [
   [/^\/api\/auth\/me\/?$/, me],
   [/^\/api\/auth\/password\/?$/, password],
   [/^\/api\/reports\/?$/, reports],
+  [/^\/api\/health\/?$/, health], // 배포 점검 (비밀값 없이 상태만)
 ];
 
 /**
