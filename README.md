@@ -8,6 +8,44 @@
 - 배포 URL: https://202610-inventory-management-for-jw.vercel.app (상태 점검: `/api/health`)
   - 다른 PC·휴대폰에서도 **이 주소로** 접속합니다. Vercel 대시보드의 Deployments 화면에서 여는 배포별 주소(`…-xxxxxxxx-sunmi3579-…vercel.app`)는 Vercel 로그인이 필요합니다.
 
+## 다음에 이어서 작업하기
+
+### 현재 상태 (2026-10-25)
+
+- 운영 중: https://202610-inventory-management-for-jw.vercel.app (Vercel Hobby + Neon `inventory`, Singapore)
+- 코드: GitHub `remon912/202610-inventory-management-for-JW`의 `main` 브랜치가 최신. `main`에 푸시하면 자동 배포
+- 관리자 비밀번호: 2026-10-11에 임시 비밀번호로 설정됨 → **웹 관리 화면의 "내 비밀번호 변경"으로 바꿀 것** (잊었으면 `npm run admin:password`)
+- 점검: 배포가 이상하면 먼저 `/api/health`를 열어 환경변수·DB·관리자 비밀번호 상태 확인
+
+### 같은 PC에서 다시 시작
+
+```bash
+git pull                 # 최신 코드 받기
+npm install              # 패키지가 바뀌었을 수 있으므로
+npm run dev:local        # 로컬 미리보기 http://localhost:5173 (관리자 비밀번호 admin1234)
+```
+
+수정 후에는 `npm run lint`, `npm run build`, `npm run test:api`로 확인하고 커밋·푸시합니다. 변경 내용은 아래 **변경 이력**에, 문제와 해결은 **오류 및 해결 기록**에 이어서 적습니다.
+
+### 다른 PC에서 시작
+
+1. Node.js 22 이상과 Git 설치, VS Code에서 `git clone https://github.com/remon912/202610-inventory-management-for-JW.git`
+2. `npm install`
+3. `.env.local`은 GitHub에 없으므로 새로 만든다: `.env.example`을 복사해 `DATABASE_URL`(Neon 콘솔 → Connect에서 복사)과 `SESSION_SECRET`(아래 명령으로 생성)을 넣는다
+   ```bash
+   node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
+   ```
+   로컬 미리보기(`npm run dev:local`)만 쓸 때는 `.env.local` 없이도 동작합니다.
+4. 로컬 미리보기의 데이터(`.local-db/`)는 PC마다 따로입니다. 운영 데이터는 Neon에 있습니다.
+
+### 남은 후보 작업 (미결정)
+
+- 사용처 이름을 바꿨을 때 지난 이력도 새 이름으로 합쳐 볼지
+- 재고자산 평가방법 (현재 단가 고정 → 이동평균법 등)
+- Vercel Function Region을 Singapore(sin1)로 설정했는지 확인
+- 일반 사용자 로그인 (지금은 이름 선택만, 주소를 아는 사람은 일반 사용자로 기록 가능)
+- Vercel Hobby는 비상업 용도 — 회사 업무용이면 Pro 플랜 검토
+
 ## 주요 기능
 
 | 화면                    | 경로                            | 내용                                                                                                                                                                    |
@@ -96,17 +134,17 @@ npm run dev                     # vercel dev: 프론트 + API 동시 실행 (htt
 
 ### 진행 상황
 
-| 단계                                                                    | 상태                                    |
-| ----------------------------------------------------------------------- | --------------------------------------- |
-| GitHub 저장소 연결 (`remon912/202610-inventory-management-for-JW`)      | 완료                                    |
-| Vercel 프로젝트 Import·빌드                                             | 완료 (함수 개수 문제 해결 후 빌드 성공) |
-| Neon 프로젝트 `inventory` (Singapore, branch `production`, DB `neondb`) | 완료 (2026-10-10)                       |
-| 테이블 생성·초기 사용자 (`db:seed`, 마이그레이션 001~004)               | 완료 (2026-10-10)                       |
-| 실제 DB 동시 출고 검사 (`test:concurrency`)                             | 통과 (2026-10-10)                       |
-| 운영 관리자 비밀번호 설정 (`admin:password`)                            | 완료 (2026-10-11, 로그인 확인)          |
-| Vercel 환경변수 `DATABASE_URL`, `SESSION_SECRET`                        | 완료 (2026-10-11)                       |
-| Vercel Function Region → Singapore                                      | **남음**                                |
-| 재배포 후 접속 확인 (`/api/health` 정상), 배포 URL 기재                 | 완료 (2026-10-11)                       |
+| 단계                                                                    | 상태                                                |
+| ----------------------------------------------------------------------- | --------------------------------------------------- |
+| GitHub 저장소 연결 (`remon912/202610-inventory-management-for-JW`)      | 완료                                                |
+| Vercel 프로젝트 Import·빌드                                             | 완료 (함수 개수 문제 해결 후 빌드 성공)             |
+| Neon 프로젝트 `inventory` (Singapore, branch `production`, DB `neondb`) | 완료 (2026-10-10)                                   |
+| 테이블 생성·초기 사용자 (`db:seed`, 마이그레이션 001~004)               | 완료 (2026-10-10)                                   |
+| 실제 DB 동시 출고 검사 (`test:concurrency`)                             | 통과 (2026-10-10)                                   |
+| 운영 관리자 비밀번호 설정 (`admin:password`)                            | 완료 (2026-10-11, 임시 비밀번호 — 웹에서 변경 필요) |
+| Vercel 환경변수 `DATABASE_URL`, `SESSION_SECRET`                        | 완료 (2026-10-11)                                   |
+| Vercel Function Region → Singapore                                      | **남음**                                            |
+| 재배포 후 접속 확인 (`/api/health` 정상), 배포 URL 기재                 | 완료 (2026-10-11)                                   |
 
 ### 작업 흐름
 
